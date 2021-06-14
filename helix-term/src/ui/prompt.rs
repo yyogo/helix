@@ -2,7 +2,7 @@ use crate::compositor::{Component, Compositor, Context, EventResult};
 use crate::ui;
 use crossterm::event::{Event, KeyCode, KeyEvent, KeyModifiers};
 use std::{borrow::Cow, ops::RangeFrom};
-use tui::buffer::Buffer as Surface;
+use tui::buffer::{Buffer as Surface, SurfaceExt};
 
 use helix_core::{
     unicode::segmentation::GraphemeCursor, unicode::width::UnicodeWidthStr, Position,

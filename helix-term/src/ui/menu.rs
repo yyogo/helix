@@ -1,6 +1,9 @@
 use crate::compositor::{Component, Compositor, Context, EventResult};
 use crossterm::event::{Event, KeyCode, KeyEvent, KeyModifiers};
-use tui::{buffer::Buffer as Surface, widgets::Table};
+use tui::{
+    buffer::{Buffer as Surface, SurfaceExt},
+    widgets::Table,
+};
 
 pub use tui::widgets::{Cell, Row};
 

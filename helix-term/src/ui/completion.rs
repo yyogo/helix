@@ -1,6 +1,6 @@
 use crate::compositor::{Component, Context, EventResult};
 use crossterm::event::{Event, KeyCode, KeyEvent};
-use tui::buffer::Buffer as Surface;
+use tui::buffer::{Buffer as Surface, SurfaceExt};
 
 use std::borrow::Cow;
 

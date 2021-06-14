@@ -12,14 +12,11 @@ repository = "https://github.com/helix-editor/helix"
 homepage = "https://helix-editor.com"
 include = ["src/**/*", "README.md"]
 
-[features]
-default = ["crossterm"]
-
 [dependencies]
 bitflags = "1.0"
 cassowary = "0.3"
 unicode-segmentation = "1.8"
-crossterm = { version = "0.20", optional = true }
+termwiz = "0.13"
 serde = { version = "1", "optional" = true, features = ["derive"]}
 helix-view = { version = "0.3", path = "../helix-view", features = ["term"] }
 helix-core = { version = "0.3", path = "../helix-core" }

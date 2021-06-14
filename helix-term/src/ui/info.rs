@@ -1,7 +1,7 @@
 use crate::compositor::{Component, Context};
 use helix_view::graphics::Rect;
 use helix_view::info::Info;
-use tui::buffer::Buffer as Surface;
+use tui::buffer::{Buffer as Surface, SurfaceExt};
 use tui::widgets::{Block, Borders, Widget};
 
 impl Component for Info {
