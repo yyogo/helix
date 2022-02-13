@@ -133,8 +133,8 @@ impl Application {
             editor.open(path, Action::VerticalSplit)?;
             // Unset path to prevent accidentally saving to the original tutor file.
             doc_mut!(editor).set_path(None)?;
-        } else if !args.files.is_empty() {
-            let first = &args.files[0].0; // we know it's not empty
+        } else if let Some((first, _)) = args.files.get(0) {
+            let first = helix_core::path::get_canonicalized_path(first)?;
             if first.is_dir() {
                 std::env::set_current_dir(&first)?;
                 editor.new_file(Action::VerticalSplit);
