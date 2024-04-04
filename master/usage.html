@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="en" class="sidebar-visible no-js colibri">
+<html lang="en" class="colibri" dir="ltr">
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
@@ -10,7 +10,7 @@
         
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="theme-color" content="#ffffff" />
+        <meta name="theme-color" content="#ffffff">
 
         <link rel="icon" href="favicon.svg">
         <link rel="shortcut icon" href="favicon.png">
@@ -21,8 +21,6 @@
 
         <!-- Fonts -->
         <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
-        <link rel="preconnect" href="https://fonts.gstatic.com">
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400;500;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="fonts/fonts.css">
 
         <!-- Highlight.js Stylesheets -->
@@ -34,7 +32,7 @@
         <link rel="stylesheet" href="custom.css">
 
     </head>
-    <body>
+    <body class="sidebar-visible no-js">
     <div id="body-container">
         <!-- Provide site root to javascript -->
         <script>
@@ -64,24 +62,29 @@
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
             var html = document.querySelector('html');
-            html.classList.remove('no-js')
             html.classList.remove('colibri')
             html.classList.add(theme);
-            html.classList.add('js');
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
         </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
-            var html = document.querySelector('html');
+            var body = document.querySelector('body');
             var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
             } else {
                 sidebar = 'hidden';
             }
-            html.classList.remove('sidebar-visible');
-            html.classList.add("sidebar-" + sidebar);
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
@@ -119,9 +122,9 @@
                                 <div id="menu-bar-hover-placeholder"></div>
                 <div id="menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
-                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
                             <i class="fa fa-bars"></i>
-                        </button>
+                        </label>
                         <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
                             <i class="fa fa-paint-brush"></i>
                         </button>
@@ -201,31 +204,45 @@ can be accessed via the command <code>hx --tutor</code> or <code>:tutor</code>.<
 <h2 id="registers"><a class="header" href="#registers">Registers</a></h2>
 <p>In Helix, registers are storage locations for text and other data, such as the
 result of a search. Registers can be used to cut, copy, and paste text, similar
-to the clipboard in other text editors. Usage is similar to Vim, with <code>&quot;</code> being
+to the clipboard in other text editors. Usage is similar to Vim, with <code>"</code> being
 used to select a register.</p>
 <h3 id="user-defined-registers"><a class="header" href="#user-defined-registers">User-defined registers</a></h3>
 <p>Helix allows you to create your own named registers for storing text, for
 example:</p>
 <ul>
-<li><code>&quot;ay</code> - Yank the current selection to register <code>a</code>.</li>
-<li><code>&quot;op</code> - Paste the text in register <code>o</code> after the selection.</li>
+<li><code>"ay</code> - Yank the current selection to register <code>a</code>.</li>
+<li><code>"op</code> - Paste the text in register <code>o</code> after the selection.</li>
 </ul>
 <p>If a register is selected before invoking a change or delete command, the selection will be stored in the register and the action will be carried out:</p>
 <ul>
-<li><code>&quot;hc</code> - Store the selection in register <code>h</code> and then change it (delete and enter insert mode).</li>
-<li><code>&quot;md</code> - Store the selection in register <code>m</code> and delete it.</li>
+<li><code>"hc</code> - Store the selection in register <code>h</code> and then change it (delete and enter insert mode).</li>
+<li><code>"md</code> - Store the selection in register <code>m</code> and delete it.</li>
 </ul>
-<h3 id="special-registers"><a class="header" href="#special-registers">Special registers</a></h3>
+<h3 id="default-registers"><a class="header" href="#default-registers">Default registers</a></h3>
+<p>Commands that use registers, like yank (<code>y</code>), use a default register if none is specified.
+These registers are used as defaults:</p>
 <div class="table-wrapper"><table><thead><tr><th>Register character</th><th>Contains</th></tr></thead><tbody>
 <tr><td><code>/</code></td><td>Last search</td></tr>
 <tr><td><code>:</code></td><td>Last executed command</td></tr>
-<tr><td><code>&quot;</code></td><td>Last yanked text</td></tr>
-<tr><td><code>_</code></td><td>Black hole</td></tr>
+<tr><td><code>"</code></td><td>Last yanked text</td></tr>
+<tr><td><code>@</code></td><td>Last recorded macro</td></tr>
 </tbody></table>
 </div>
-<p>The system clipboard is not directly supported by a special register. Instead, special commands and keybindings are provided. Refer to the
-<a href="keymap.html#space-mode">key map</a> for more details.</p>
-<p>The black hole register is a no-op register, meaning that no data will be read or written to it.</p>
+<h3 id="special-registers"><a class="header" href="#special-registers">Special registers</a></h3>
+<p>Some registers have special behavior when read from and written to.</p>
+<div class="table-wrapper"><table><thead><tr><th>Register character</th><th>When read</th><th>When written</th></tr></thead><tbody>
+<tr><td><code>_</code></td><td>No values are returned</td><td>All values are discarded</td></tr>
+<tr><td><code>#</code></td><td>Selection indices (first selection is <code>1</code>, second is <code>2</code>, etc.)</td><td>This register is not writable</td></tr>
+<tr><td><code>.</code></td><td>Contents of the current selections</td><td>This register is not writable</td></tr>
+<tr><td><code>%</code></td><td>Name of the current file</td><td>This register is not writable</td></tr>
+<tr><td><code>+</code></td><td>Reads from the system clipboard</td><td>Joins and yanks to the system clipboard</td></tr>
+<tr><td><code>*</code></td><td>Reads from the primary clipboard</td><td>Joins and yanks to the primary clipboard</td></tr>
+</tbody></table>
+</div>
+<p>When yanking multiple selections to the clipboard registers, the selections
+are joined with newlines. Pasting from these registers will paste multiple
+selections if the clipboard was last yanked to by the Helix session. Otherwise
+the clipboard contents are pasted as one selection.</p>
 <h2 id="surround"><a class="header" href="#surround">Surround</a></h2>
 <p>Helix includes built-in functionality similar to <a href="https://github.com/tpope/vim-surround">vim-surround</a>.
 The keymappings have been inspired from <a href="https://github.com/machakann/vim-sandwich">vim-sandwich</a>:</p>
@@ -289,7 +306,7 @@ documentation.</p>
 and requires the corresponding query file to work properly.</p>
 </blockquote>
 <h2 id="moving-the-selection-with-syntax-aware-motions"><a class="header" href="#moving-the-selection-with-syntax-aware-motions">Moving the selection with syntax-aware motions</a></h2>
-<p><code>Alt-p</code>, <code>Alt-o</code>, <code>Alt-i</code>, and <code>Alt-n</code> (or <code>Alt</code> and arrow keys) allow you to move the 
+<p><code>Alt-p</code>, <code>Alt-o</code>, <code>Alt-i</code>, and <code>Alt-n</code> (or <code>Alt</code> and arrow keys) allow you to move the
 selection according to its location in the syntax tree. For example, many languages have the
 following syntax for function calls:</p>
 <pre><code class="language-js">func(arg1, arg2, arg3);
@@ -311,12 +328,12 @@ a more intuitive tree format:</p>
       │                │
 ┌─────▼────┐      ┌────▼────┐
 │identifier│      │arguments│
-│  &quot;func&quot;  │ ┌────┴───┬─────┴───┐
+│  "func"  │ ┌────┴───┬─────┴───┐
 └──────────┘ │        │         │
              │        │         │
    ┌─────────▼┐  ┌────▼─────┐  ┌▼─────────┐
    │identifier│  │identifier│  │identifier│
-   │  &quot;arg1&quot;  │  │  &quot;arg2&quot;  │  │  &quot;arg3&quot;  │
+   │  "arg1"  │  │  "arg2"  │  │  "arg3"  │
    └──────────┘  └──────────┘  └──────────┘
 </code></pre>
 <p>If you have a selection that wraps <code>arg1</code> (see the tree above), and you use
@@ -335,7 +352,7 @@ node with no sibling. When using <code>Alt-p</code> with a selection on <code>ar
 child node will be selected. In the event that <code>arg1</code> does not have a previous
 sibling, the selection will move up the syntax tree and select the previous
 element. As a result, using <code>Alt-p</code> with a selection on <code>arg1</code> will move the
-selection to the &quot;func&quot; <code>identifier</code>.</p>
+selection to the "func" <code>identifier</code>.</p>
 
                     </main>
 
@@ -345,7 +362,7 @@ selection to the &quot;func&quot; <code>identifier</code>.</p>
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next" href="keymap.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="keymap.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -359,7 +376,7 @@ selection to the &quot;func&quot; <code>identifier</code>.</p>
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next" href="keymap.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="keymap.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
